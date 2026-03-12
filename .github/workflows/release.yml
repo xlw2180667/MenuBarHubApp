@@ -17,6 +17,11 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
 
+      - name: Patch signing for CI
+        run: |
+          sed -i '' 's/DEVELOPMENT_TEAM = BMM986A3RM/DEVELOPMENT_TEAM = ""/g' MenuBarHubApp.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' MenuBarHubApp.xcodeproj/project.pbxproj
+
       - name: Archive
         run: |
           xcodebuild archive \
