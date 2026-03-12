@@ -8,10 +8,7 @@ MenuBarHub is a free macOS menu bar manager that shows all your running apps —
 ![Swift](https://img.shields.io/badge/Swift-6.2-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-<!--
-TODO: Add screenshot here
 ![screenshot](./assets/screenshot.png)
--->
 
 ## Why?
 
