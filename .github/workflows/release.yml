@@ -24,6 +24,10 @@ jobs:
             -scheme MenuBarHubApp \
             -configuration Release \
             -archivePath build/MenuBarHubApp.xcarchive \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="" \
             -quiet
 
       - name: Export .app
