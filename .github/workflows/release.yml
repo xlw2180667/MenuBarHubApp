@@ -1,0 +1,55 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -project MenuBarHubApp.xcodeproj \
+            -scheme MenuBarHubApp \
+            -configuration Release \
+            -archivePath build/MenuBarHubApp.xcarchive \
+            -quiet
+
+      - name: Export .app
+        run: |
+          mkdir -p build/export
+          cp -R build/MenuBarHubApp.xcarchive/Products/Applications/MenuBarHubApp.app build/export/
+
+      - name: Create .dmg
+        run: |
+          mkdir -p build/dmg-staging
+          cp -R build/export/MenuBarHubApp.app build/dmg-staging/
+          ln -s /Applications build/dmg-staging/Applications
+          hdiutil create \
+            -volname "MenuBarHubApp" \
+            -srcfolder build/dmg-staging \
+            -ov -format UDZO \
+            "build/MenuBarHubApp-${GITHUB_REF_NAME}.dmg"
+
+      - name: Upload .dmg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MenuBarHubApp-dmg
+          path: build/MenuBarHubApp-*.dmg
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/MenuBarHubApp-*.dmg
+          generate_release_notes: true
